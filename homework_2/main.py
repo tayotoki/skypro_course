@@ -4,6 +4,20 @@ from dto import Student, Profession
 
 @printable_view(as_string=True)
 def check_fitness(student: Student, profession: Profession):
+    """
+    Проверяет соответствие студента профессии по соответсвующим
+    атрибутам моделей.
+
+    Parameters
+    ----------
+    student : экземляр модели Student
+    profession : экземляр модели Profession
+
+    Returns
+    -------
+    Словарь со статистикой соответствия студента профессии.
+    """
+
     has = set(student.skills) & set(profession.skills)
     lacks = set(profession.skills) - set(student.skills)
     fit_percent = round(

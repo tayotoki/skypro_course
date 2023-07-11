@@ -7,6 +7,17 @@ from settings import FIXTURES_ROOT
 
 
 class BaseModel(ABC):
+    """
+    Базовый абстрактный класс для представления моделей данных.
+    Необходимо переопределние метода get(cls, search_param: Any)
+    для поиска необходимого экземпляра по переданному параметру.
+
+    Attributes:
+        pk: int - Первичный ключ.
+        skills: list[str] - Список строк с навыками.
+        instances: Optional[list[Self]] - список с экземлярами модели.
+    """
+
     pk: int
     skills: list[str]
     instances: Optional[list[Self]] = None
@@ -26,6 +37,11 @@ class BaseModel(ABC):
 
     @classmethod
     def load_data(cls):
+        """
+        Метод для загрузки фикстур в атрибуты
+        классов соответствующих моделей.
+        """
+
         for *_, fixtures_names in os.walk(FIXTURES_ROOT):
             for fixture in fixtures_names:
                 with open(FIXTURES_ROOT / fixture) as file:
