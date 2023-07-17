@@ -1,14 +1,15 @@
-from typing import Any, Optional
 import json
+from typing import Any, Optional
 
 from bs4 import BeautifulSoup
-from connection import pages_generator
+
+from .connection import pages_generator
 
 
 class Parser:
     parser: BeautifulSoup = BeautifulSoup
     generator = pages_generator
-    words_storage: Optional[list[dict[str, str | list[str]]]] = None
+    data_list: Optional[list[dict[str, str | list[str]]]] = None
 
     @classmethod
     def collect_data(cls) -> None:
@@ -32,22 +33,22 @@ class Parser:
             for words_ in words:
                 current_words = words_("a")
 
-                for subword in current_words:
-                    subword = subword.string
+                for subword in current_words:  # noqa
+                    subword = subword.string  # noqa
 
-                    if len(subword) > 3:
+                    if len(subword) > 2:
                         buffer.append(subword)
 
         return buffer
 
     @classmethod
     def add_to_storage(cls, data: dict):
-        if cls.words_storage is None:
-            cls.words_storage = []
+        if cls.data_list is None:
+            cls.data_list = []
 
-        cls.words_storage.append(data)
+        cls.data_list.append(data)
 
 
-Parser.collect_data()
-
-print(json.dumps(Parser.words_storage, indent=2, ensure_ascii=False))
+if __name__ == "__main__":
+    Parser.collect_data()
+    print(json.dumps(Parser.data_list, indent=2, ensure_ascii=False))

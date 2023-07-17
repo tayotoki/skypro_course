@@ -3,7 +3,7 @@ from typing import Generator, Any
 import requests
 from fake_useragent import UserAgent
 
-from settings import WORDS
+from course_work.settings import WORDS
 
 url = "https://wordhelp.ru/search"
 
