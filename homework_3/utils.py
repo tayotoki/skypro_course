@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Optional
 
 from decorators import shuffle
 
@@ -16,7 +17,7 @@ def get_questions(fixture: Path = QUESTIONS_FIXTURE) -> list[Question]:
     question_instances = []
 
     with open(fixture, "r", encoding="utf-8") as questions_:
-        data = json.loads("\n".join(questions_.readlines()))
+        data = json.load(questions_)
 
         for obj in data:
             question_instances.append(
@@ -30,29 +31,22 @@ def get_questions(fixture: Path = QUESTIONS_FIXTURE) -> list[Question]:
 
 
 class Question:
-    def __init__(
-            self,
-            text: str,
-            difficulty: int,
-            answer: str,
-            asked: bool = False,
-            user_answer=None,
-    ) -> None:
+    def __init__(self, text: str, difficulty: int, answer: str) -> None:
         self._text = text
         self._difficulty = difficulty
         self._answer = answer.lower()
-        self._asked = asked
-        self.user_answer = user_answer
-        self._points = 0
-        self.possible_points = 10 * self._difficulty
+        self._asked: bool = False
+        self.user_answer: [Optional[str]] = None
+        self._points: int = 0
+        self.possible_points: int = 10 * self._difficulty
 
-    def __call__(self, **kwargs):
-        kwargs = {
-            f"_{key}": value
-            for key, value in kwargs.items()
-            if f"_{key}" in self.__dict__
-        }
-        self.__dict__.update(kwargs)
+    # def __call__(self, **kwargs):
+    #     kwargs = {
+    #         f"_{key}": value
+    #         for key, value in kwargs.items()
+    #         if f"_{key}" in self.__dict__
+    #     }
+    #     self.__dict__.update(kwargs)
 
     @property
     def points(self) -> int:
@@ -84,3 +78,4 @@ class Question:
 
 if __name__ != "__main__":
     questions: list[Question] = get_questions()
+
